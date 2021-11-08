@@ -1,6 +1,9 @@
-from tkinter import *
-import os  
+from objects.producer import Producer
 
+
+from tkinter import *
+
+import os  
 import math
 
 class Controller(Frame): 
@@ -20,10 +23,15 @@ class Controller(Frame):
 
 
         # buttons 
+        self.message_button = None
+        self.stream_button = None
+        self.get_button = None 
+        self.listen_button = None
+        self.test_button = None
+        
         self.start_button = None 
         self.stop_button = None 
         self.close_button = None 
-        self.exit_button = None 
 
         # titles 
         self.broker_entry_l = None
@@ -35,20 +43,46 @@ class Controller(Frame):
         self.UIinit()
 
     def UIinit(self): 
+        
+        def init_input_frames(object): 
+            print() 
+        
+        def init_button_frames(object):
+            self.button_frame = Frame(self.root, borderwidth=2, border=1)
+            self.button_frame.grid(row=0, column=1)
+            
+            self.message_button = Button(self.button_frame, text="Message", command= lambda:close(self), width=15)
+            self.stream_button = Button(self.button_frame, text="Stream", command= lambda:close(self), width=15)
+            self.get_button = Button(self.button_frame, text="Get", command= lambda:close(self), width=15) 
+            self.listen_button = Button(self.button_frame, text="Listen", command= lambda:close(self), width=15)
+            self.test_button = Button(self.button_frame, text="Test", command= lambda:close(self), width=15)
+            
+            self.start_button = Button(self.button_frame, text="Start/Send", command= lambda:close(self), width=15)
+            self.stop_button = Button(self.button_frame, text="Stop", command= lambda:close(self), width=15)
+            self.close_button = Button(self.button_frame, text="Close", command= lambda:close(self), width=15)
+            
+            self.message_button.grid(row=0, column=3)
+            self.stream_button.grid(row=0, column=5)
+            self.get_button.grid(row=2, column=3)            
+            self.listen_button.grid(row=2, column=5)
+            self.test_button.grid(row=0, column=7)
+            
+            self.start_button.grid(row=4, column=3)
+            self.stop_button.grid(row=4, column=5)
+            self.close_button.grid(row=2, column=7)
+            
+            
         def close(object):
             self._running = False
             os.sys.exit(0)
 
-        self.pack(side=RIGHT, expand=True)
-        self.pack_propagate(0)
-
-        self.button_frame = Frame(self)
-        self.button_frame.pack(fill=BOTH, expand=True)
-
-        self.exit_button = Button(self, text="Exit", command= lambda:close(self))
+        #self.gri(side=RIGHT, expand=True)
+        #self.pack_propagate(0)
         
-        status_str = "Broker IP: " + self.broker_host
-        self.status_bar = Label(self, text=status_str, bd=1, relief = SUNKEN, anchor=W)
+        init_button_frames(self)
 
-        self.status_bar.pack(side=BOTTOM, fill=X)
-        self.exit_button.pack(side=TOP)
+        status_str = "Broker IP: " + self.broker_host
+        self.status_bar = Label(self.root, text=status_str, bd=1, relief = SUNKEN, anchor=W)
+        self.status_bar.grid(row=10, columnspan=15)
+        #self.status_bar.pack(side=BOTTOM, fill=X)
+        #self.exit_button.pack(side=TOP)

@@ -43,7 +43,7 @@ class User():
 
     def open_controller(self): 
         
-        self.app_2 = View(self.root, self) 
+        #self.app_2 = View(self.root, self) 
         self.app = Controller(self.root, self)
         
         os.system('clear')
