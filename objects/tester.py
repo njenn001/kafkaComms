@@ -8,10 +8,29 @@ class Tester():
     # run test sequence
     def run(self): 
         
-        
         self.user.set_broker_info()
         self.user.consumer = Consumer(self.user)
         
-        self.user.consumer.get_topics() 
+        try:
+            self.user.consumer.get_topics() 
+            self.user.controller.host_entry.config(state='disabled')
+            self.user.controller.port_entry.config(state='disabled')
+            self.user.controller.test_button.config(state='disabled')
+                        
+            self.user.controller.topic_button.config(state='normal')    
+            self.user.controller.topics_button.config(state='normal') 
+            self.user.controller.message_button.config(state='normal')
+            self.user.controller.stream_button.config(state='normal')
+            self.user.controller.get_button.config(state='normal')
+            self.user.controller.listen_button.config(state='normal')
+            self.user.controller.start_button.config(state='normal')
+            
+            suc = True
+            self.user.status_bar.refresh_status(suc)
+                    
+                                   
+        except Exception as ex: 
+            fail = False 
+            self.user.status_bar.refresh_status(fail)
         
-        pass
+        

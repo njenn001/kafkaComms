@@ -38,12 +38,16 @@ class Controller(Frame):
         self.port_title = None 
         self.message_title = None 
         self.topic_title = None 
+        self.rep_fac_title = None
+        self.part_title = None
 
         # entries 
         self.host_entry = None
         self.port_entry = None 
         self.message_entry = None 
         self.topic_entry = None 
+        self.rep_fac_entry = None
+        self.part_entry = None
 
         # Controller Init 
         self.UIinit()
@@ -94,12 +98,16 @@ class Controller(Frame):
             object.port_title = Label(object.input_frame, text="PORT")
             object.topic_title = Label(object.input_frame, text="TOPIC")
             object.message_title = Label(object.input_frame, text="MESSAGE")
+            object.rep_fac_title = Label(object.input_frame, text="REP. FACTOR")
+            object.part_title = Label(object.input_frame, text="NUM. PARTITIONS")
             
             
-            object.host_entry = Entry(object.input_frame, foreground='grey')
-            object.port_entry = Entry(object.input_frame, foreground='grey')
-            object.topic_entry = Entry(object.input_frame, foreground='grey')
-            object.message_entry = Entry(object.input_frame, foreground='grey')
+            object.host_entry = Entry(object.input_frame, foreground='black')
+            object.port_entry = Entry(object.input_frame, foreground='black')
+            object.topic_entry = Entry(object.input_frame, foreground='black', state='disabled')
+            object.message_entry = Text(object.input_frame, foreground='black', width=15, height=5, state='disabled')
+            object.rep_fac_entry = Entry(object.input_frame, foreground='black', state='disabled')
+            object.part_entry = Entry(object.input_frame, foreground='black', state='disabled')
             
             object.host_title.grid(row=0, column=0)
             object.host_entry.grid(row=0, column=1, columnspan=14)
@@ -109,23 +117,56 @@ class Controller(Frame):
             object.topic_entry.grid(row=2, column=1)
             object.message_title.grid(row=3, column=0)
             object.message_entry.grid(row=3, column=1)
+            object.rep_fac_title.grid(row=4, column=0)
+            object.rep_fac_entry.grid(row=4, column=1)
+            object.part_title.grid(row=5, column=0)
+            object.part_entry.grid(row=5, column=1)
                         
             
         # Initialize button frame 
         def init_button_frames(object):
+            
+            # Change button color on hover 
+            def on_enter(e): 
+                if e.widget.cget("text") == 'Test' and e.widget.cget('state') == "normal":
+                    object.test_button['background'] = 'light green'
+                elif e.widget.cget('text') == "Start/Send" and e.widget.cget('state') == "normal":
+                    object.start_button['background'] = 'light green'
+                elif e.widget.cget("text") == 'Close':
+                    object.close_button['background'] = 'red'
+                    
+            # Change button color back 
+            def on_leave(e): 
+                if e.widget.cget("text") == 'Test':
+                    object.test_button['background'] = 'white'
+                elif e.widget.cget('text') == "Start/Send":
+                    object.start_button['background'] = 'white'
+                elif e.widget.cget("text") == 'Close':
+                    object.close_button['background'] = 'white'
+            
             object.button_frame = Frame(object.root, borderwidth=2, border=1)
             object.button_frame.grid(row=1, column=0, pady=50, padx=(50,25))
             
-            object.topic_button = Button(object.button_frame, text="New Topic", command= lambda:msg_seq(object), width=15, state='disabled')
-            object.topics_button = Button(object.button_frame, text="Topics", command= lambda:msg_seq(object), width=15, state='disabled')
-            object.message_button = Button(object.button_frame, text="Message", command= lambda:msg_seq(object), width=15, state='disabled')
-            object.stream_button = Button(object.button_frame, text="Stream", command= lambda:close(object), width=15, state='disabled')
-            object.get_button = Button(object.button_frame, text="Get", command= lambda:close(object), width=15, state='disabled')
-            object.listen_button = Button(object.button_frame, text="Listen", command= lambda:close(object), width=15, state='disabled')
-            object.test_button = Button(object.button_frame, text="Test", command= lambda:test_seq(object), width=15, state='normal')
-            object.start_button = Button(object.button_frame, text="Start/Send", command= lambda:close(object), width=15, state='disabled')
-            object.stop_button = Button(object.button_frame, text="Stop", command= lambda:close(object), width=15, state='disabled')
-            object.close_button = Button(object.button_frame, text="Close", command= lambda:close(object), width=15, state='normal')
+            object.topic_button = Button(object.button_frame, text="New Topic", command= lambda:msg_seq(object), width=15, state='disabled', bg = 'white')
+            object.topics_button = Button(object.button_frame, text="Topics", command= lambda:msg_seq(object), width=15, state='disabled', bg = 'white')
+            object.message_button = Button(object.button_frame, text="Message", command= lambda:msg_seq(object), width=15, state='disabled', bg = 'white')
+            object.stream_button = Button(object.button_frame, text="Stream", command= lambda:close(object), width=15, state='disabled', bg = 'white')
+            object.get_button = Button(object.button_frame, text="Get", command= lambda:close(object), width=15, state='disabled', bg = 'white')
+            object.listen_button = Button(object.button_frame, text="Listen", command= lambda:close(object), width=15, state='disabled', bg = 'white')
+            object.test_button = Button(object.button_frame, text="Test", command= lambda:test_seq(object), width=15, state='normal', bg = 'white')
+            object.start_button = Button(object.button_frame, text="Start/Send", command= lambda:close(object), width=15, state='disabled', bg = 'white')
+            object.stop_button = Button(object.button_frame, text="Stop", command= lambda:close(object), width=15, state='disabled', bg = 'white')
+            object.close_button = Button(object.button_frame, text="Close", command= lambda:close(object), width=15, state='normal', bg = 'white')
+            
+            object.test_button.bind("<Enter>", on_enter)
+            object.test_button.bind("<Leave>", on_leave)
+            
+            object.start_button.bind("<Enter>", on_enter)
+            object.start_button.bind("<Leave>", on_leave)
+            
+            object.close_button.bind("<Enter>", on_enter)
+            object.close_button.bind("<Leave>", on_leave)
+            
             
             object.topic_button.grid(row=0, column=0)
             object.topics_button.grid(row=1, column=0)

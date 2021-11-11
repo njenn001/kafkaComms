@@ -26,6 +26,16 @@ class View(Frame):
         
         # Controller Init 
         self.UIinit()
+        
+    def clear_lines(self): 
+        self.text_lines = Text(self.view_frame, width = 50, height = 15, wrap = NONE,
+                 xscrollcommand = self.scroll_bar_horizontal.set,
+                 yscrollcommand = self.scroll_bar_horizontal.set) 
+        
+    def show_text(self, arr):
+        for l in arr: 
+          self.user.view.text_lines.insert(END, str(l) + "\n")  
+        self.user.view.text_lines.config(state='disabled')
 
     def UIinit(self): 
         
@@ -53,3 +63,5 @@ class View(Frame):
  
         
         init_view_frames(self)
+        
+        #self.title = Text(self.root, text=self.)
