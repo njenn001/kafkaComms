@@ -1,9 +1,11 @@
+from objects.consumer import Consumer
 from objects.producer import Producer
 from objects.tester import Tester 
 
 
 from tkinter import *
 import os  
+import threading
 
 class Controller(Frame): 
 
@@ -49,6 +51,17 @@ class Controller(Frame):
         self.rep_fac_entry = None
         self.part_entry = None
 
+        # boolean flags 
+        self.topic_started = False 
+        self.msg_started = False 
+        self.stream_started = False 
+        self.get_started = False
+        self.listen_started = False  
+        self.test_started = False 
+
+        # threads
+        self.msg_thread = None 
+
         # Controller Init 
         self.UIinit()
     
@@ -59,7 +72,63 @@ class Controller(Frame):
         def close(object):
             object._running = False
             os.sys.exit(0)
+        
+        # Start action_set or Send action 
+        def start_send_seq(object): 
             
+            # Send new Topic 
+            if object.topic_started: 
+                object.user.producer = Producer(object.user)
+            
+                try: 
+                    object.user.producer.make_topic() 
+                except Exception as ex: 
+                    print(ex)
+
+                object.topic_started = False 
+            
+            # Send Message 
+            elif object.msg_started: 
+
+                def message_thread(object): 
+                    object.user.producer = Producer(object.user)
+                    #object.user.consumer = Consumer(object.user)
+
+                    try: 
+                        object.user.producer.send_msg() 
+
+                        object.message_entry.delete('1.0', END)
+                        object.topic_entry.delete('1.0', END)
+
+                        object.user.status_bar.refresh_action(TRUE)
+
+                        object.user.producer.close() 
+
+                    except Exception as ex: 
+                    
+                        self.user.status_bar.refresh_action(FALSE)
+
+                        print(ex)
+                    print() 
+
+                object.msg_thread = threading.Thread(target=message_thread, args=([object]))
+                object.msg_thread.start() 
+                
+                object.msg_started = False 
+
+            # Get Messages once 
+            elif object.get_started: 
+                
+                object.user.consumer = Consumer(object.user)
+                object.user.consumer.topic_name = object.topic_entry.get() 
+
+                try: 
+                    object.user.consumer.get_msgs()
+
+                except Exception as ex: 
+                    print(ex) 
+
+        # REWIRE THIS 
         # End address:port designation 
         def stop_seq(object): 
             
@@ -90,7 +159,8 @@ class Controller(Frame):
             self.test_button.config(state='normal')
             self.close_button.config(state='normal')
             
-
+        # WORK ON THIS 
+        # Reconfigure button elements 
         def reconfig(children, conf_str): 
             
             if conf_str == 'msg': 
@@ -105,15 +175,88 @@ class Controller(Frame):
                     c.configure(state='disabled')'''
           
           
-        
-        # Begin Message Sequence 
-        def msg_seq(object): 
-            #reconfig(self.input_frame.winfo_children(), 'msg')
+        # Begin get sequence 
+        def get_seq(object):
+
+            self.get_started = True 
+
+            self.host_entry.config(state='disabled')
+            self.port_entry.config(state='disabled')
+            self.test_button.config(state='disabled')
+            self.close_button.config(state='disabled')       
+            self.topic_button.config(state='disabled')
+            self.topics_button.config(state='disabled') 
+            self.message_button.config(state='disabled')
+            self.stream_button.config(state='disabled')
+            self.get_button.config(state='disabled')
+            self.listen_button.config(state='disabled')
+            self.rep_fac_entry.config(state='disabled')
+            self.part_entry.config(state='disabled') 
             
-            self.user.producer = Producer(self.user) 
+            self.message_entry.config(state='disabled')
+            self.start_button.config(state='normal')
+            self.stop_button.config(state='normal')
+            self.topic_entry.config(state='normal')
+
             print() 
+
+        # WORK ON THIS 
+        # Begin message sequence 
+        def msg_seq(object): 
+            self.msg_started = True
             
-        # performing tests before accessing other KAFKA elements 
+            self.host_entry.config(state='disabled')
+            self.port_entry.config(state='disabled')
+            self.test_button.config(state='disabled')
+            self.close_button.config(state='disabled')       
+            self.topic_button.config(state='disabled')
+            self.topics_button.config(state='disabled') 
+            self.message_button.config(state='disabled')
+            self.stream_button.config(state='disabled')
+            self.get_button.config(state='disabled')
+            self.listen_button.config(state='disabled')
+            self.rep_fac_entry.config(state='disabled')
+            self.part_entry.config(state='disabled') 
+            
+            self.message_entry.config(state='normal')
+            self.start_button.config(state='normal')
+            self.stop_button.config(state='normal')
+            self.topic_entry.config(state='normal')
+
+            print() 
+
+        # WORK ON THIS 
+        # Begin topic sequence 
+        def topic_seq(object): 
+            self.topic_started = True
+            
+            self.host_entry.config(state='disabled')
+            self.port_entry.config(state='disabled')
+            self.test_button.config(state='disabled')
+            self.close_button.config(state='disabled')       
+            self.topic_button.config(state='disabled')
+            self.topics_button.config(state='disabled') 
+            self.message_button.config(state='disabled')
+            self.stream_button.config(state='disabled')
+            self.get_button.config(state='disabled')
+            self.listen_button.config(state='disabled')
+            self.message_entry.config(state='disabled')
+
+            self.start_button.config(state='normal')
+            self.stop_button.config(state='normal')
+            self.topic_entry.config(state='normal')
+            self.rep_fac_entry.config(state='normal')
+            self.part_entry.config(state='normal')
+
+            print() 
+
+        # WORK ON THIS 
+        # Begin topic(s) sequence
+        def topics_seq(object): 
+            print() 
+
+            
+        # Perform tests before accessing other KAFKA elements 
         def test_seq(object): 
             
             object.tester = Tester(object.user)
@@ -210,14 +353,14 @@ class Controller(Frame):
             object.button_frame = Frame(object.root, borderwidth=2, border=1)
             object.button_frame.grid(row=1, column=0, pady=50, padx=(50,25))
             
-            object.topic_button = Button(object.button_frame, text="New Topic", command= lambda:msg_seq(object), width=15, state='disabled', bg = 'white')
+            object.topic_button = Button(object.button_frame, text="New Topic", command= lambda:topic_seq(object), width=15, state='disabled', bg = 'white')
             object.topics_button = Button(object.button_frame, text="Topics", command= lambda:msg_seq(object), width=15, state='disabled', bg = 'white')
             object.message_button = Button(object.button_frame, text="Message", command= lambda:msg_seq(object), width=15, state='disabled', bg = 'white')
             object.stream_button = Button(object.button_frame, text="Stream", command= lambda:close(object), width=15, state='disabled', bg = 'white')
-            object.get_button = Button(object.button_frame, text="Get", command= lambda:close(object), width=15, state='disabled', bg = 'white')
+            object.get_button = Button(object.button_frame, text="Get", command= lambda:get_seq(object), width=15, state='disabled', bg = 'white')
             object.listen_button = Button(object.button_frame, text="Listen", command= lambda:close(object), width=15, state='disabled', bg = 'white')
             object.test_button = Button(object.button_frame, text="Test", command= lambda:test_seq(object), width=15, state='normal', bg = 'white')
-            object.start_button = Button(object.button_frame, text="Start/Send", command= lambda:close(object), width=15, state='disabled', bg = 'white')
+            object.start_button = Button(object.button_frame, text="Start/Send", command= lambda:start_send_seq(object), width=15, state='disabled', bg = 'white')
             object.stop_button = Button(object.button_frame, text="Stop", command= lambda:stop_seq(object), width=15, state='disabled', bg = 'white')
             object.close_button = Button(object.button_frame, text="Close", command= lambda:close(object), width=15, state='normal', bg = 'white')
             

@@ -28,15 +28,12 @@ class View(Frame):
         self.UIinit()
         
     def clear_lines(self): 
-        self.text_lines = Text(self.view_frame, width = 50, height = 15, wrap = NONE,
-                 xscrollcommand = self.scroll_bar_horizontal.set,
-                 yscrollcommand = self.scroll_bar_horizontal.set) 
+        self.text_lines.delete('1.0', END)
         
     def show_text(self, arr):
+        self.clear_lines() 
         for l in arr: 
-          self.user.view.text_lines.insert(END, str(l) + "\n")  
-        self.user.view.text_lines.config(state='disabled')
-
+          self.text_lines.insert(END, str(l) + "\n")  
     def UIinit(self): 
         
         # Initialize text lines
@@ -51,7 +48,7 @@ class View(Frame):
             
             object.text_lines = Text(object.view_frame, width = 50, height = 15, wrap = NONE,
                  xscrollcommand = object.scroll_bar_horizontal.set,
-                 yscrollcommand = object.scroll_bar_horizontal.set)
+                 yscrollcommand = object.scroll_bar_horizontal.set, state='disabled')
     
             # insert some text into the text widget
             '''for i in range(20):
