@@ -64,4 +64,5 @@ class View(Frame):
         
         init_view_frames(self)
         
-        #self.title = Text(self.root, text=self.)
+        self.title = Text(self.view_frame) 
+        self.title.insert(END, str(self.title_txt) + "\n") 

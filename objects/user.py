@@ -34,7 +34,7 @@ class User():
         
         # producer needs 
         self.producer = None 
-        self.consumers = []        
+        self.producers = []        
         
         
     # Set broker elements 

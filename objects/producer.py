@@ -1,13 +1,22 @@
-from kafka import KafkaProducer
+from kafka import * 
+from tkinter import * 
 
-class Producer(KafkaProducer): 
-    def __init__(self):
-        self.IP = '192.168.0.101:9092'
+class Producer(KafkaAdminClient): 
+    def __init__(self, user):
+        self.user = user 
+         
+        # topic info 
+        self.topic_list = [] 
         self.topic = '' 
-        self.message = ''
         
-        super().__init__(bootstrap_servers = self.IP) 
+        # message info 
+        self.message = [] 
+       
+    def get_topics(self): 
+        super().__init__(bootstrap_servers=self.user.broker_id_str)
+        self.topic_list = self.topics()
         
-        
-        
-        #self.send('foobar', b'some_message_bytes')
+        if not self.topic_list: 
+            raise RuntimeError()
+        else: 
+            self.user.view.show_text(self.topic_list)
