@@ -31,9 +31,12 @@ class View(Frame):
         self.text_lines.delete('1.0', END)
         
     def show_text(self, arr):
+        self.text_lines.config(state='normal')
         self.clear_lines() 
         for l in arr: 
-          self.text_lines.insert(END, str(l) + "\n")  
+          self.text_lines.insert(END, str(l) + "\n") 
+        self.text_lines.config(state='disabled') 
+        
     def UIinit(self): 
         
         # Initialize text lines

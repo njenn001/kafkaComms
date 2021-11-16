@@ -6,6 +6,7 @@ from objects.tester import Tester
 from tkinter import *
 import os  
 import threading
+import time 
 
 class Controller(Frame): 
 
@@ -61,6 +62,7 @@ class Controller(Frame):
 
         # threads
         self.msg_thread = None 
+        self.get_thread = None 
 
         # Controller Init 
         self.UIinit()
@@ -70,11 +72,46 @@ class Controller(Frame):
         # REWRITE 
         # OS specific and shutdown TK 
         def close(object):
-            object._running = False
-            os.sys.exit(0)
+            object.root.destroy() 
         
         # Start action_set or Send action 
         def start_send_seq(object): 
+            
+            def message_thread(object): 
+                object.user.producer = Producer(object.user)
+
+                try: 
+                    object.user.producer.send_msg() 
+                    time.sleep(5)     
+                    object.user.producer.close()
+                    
+                    #object.get_thread = threading.Thread(target=get_thread, args=([object]))
+                    #object.get_thread.start() 
+                    
+                    object.user.status_bar.refresh_action(TRUE)
+                    
+                    
+                except Exception as ex: 
+                
+                    self.user.status_bar.refresh_action(FALSE)
+
+                    print(ex)
+                    
+            def get_thread(object): 
+                object.user.consumer = Consumer(object.user)
+                
+                try: 
+                    object.user.consumer.get = True 
+                    object.user.consumer.get_msgs()
+                    time.sleep(5)
+                    
+                    object.user.status_bar.refresh_action(TRUE)
+                        
+                except Exception as ex: 
+                
+                    self.user.status_bar.refresh_action(FALSE)
+
+                    print(ex)   
             
             # Send new Topic 
             if object.topic_started: 
@@ -90,43 +127,21 @@ class Controller(Frame):
             # Send Message 
             elif object.msg_started: 
 
-                def message_thread(object): 
-                    object.user.producer = Producer(object.user)
-                    #object.user.consumer = Consumer(object.user)
-
-                    try: 
-                        object.user.producer.send_msg() 
-
-                        object.message_entry.delete('1.0', END)
-                        object.topic_entry.delete('1.0', END)
-
-                        object.user.status_bar.refresh_action(TRUE)
-
-                        object.user.producer.close() 
-
-                    except Exception as ex: 
-                    
-                        self.user.status_bar.refresh_action(FALSE)
-
-                        print(ex)
-                    print() 
-
                 object.msg_thread = threading.Thread(target=message_thread, args=([object]))
                 object.msg_thread.start() 
                 
                 object.msg_started = False 
+                
+                
+                #object.topic_entry.delete(0, 'end')
 
             # Get Messages once 
             elif object.get_started: 
                 
-                object.user.consumer = Consumer(object.user)
-                object.user.consumer.topic_name = object.topic_entry.get() 
-
-                try: 
-                    object.user.consumer.get_msgs()
-
-                except Exception as ex: 
-                    print(ex) 
+                object.get_thread = threading.Thread(target=get_thread, args=([object]))
+                object.get_thread.start()
+                
+                object.get_started = False 
 
         # REWIRE THIS 
         # End address:port designation 
@@ -158,6 +173,16 @@ class Controller(Frame):
             
             self.test_button.config(state='normal')
             self.close_button.config(state='normal')
+            
+            if self.user.producer is not None: 
+                print() 
+                self.user.producer.close()
+                self.msg_thread.join()  
+            if self.user.consumer is not None: 
+                self.user.consumer.close()
+                self.get_thread.join()  
+                
+            self.user.consumer.get = False 
             
         # WORK ON THIS 
         # Reconfigure button elements 

@@ -13,8 +13,8 @@ class Tester():
         
         try:
             self.user.consumer.get_topics() 
-            suc = True
-            self.user.status_bar.refresh_status(suc)
+            self.user.status_bar.refresh_status(True)
+            self.user.status_bar.refresh_status(True)
             
             self.user.controller.host_entry.config(state='disabled')
             self.user.controller.port_entry.config(state='disabled')

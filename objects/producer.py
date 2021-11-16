@@ -24,6 +24,8 @@ class Producer(KafkaProducer):
         self.topic_name = self.user.controller.topic_entry.get()
         self.message = self.user.controller.message_entry.get('1.0', END).splitlines()
         
+        self.user.controller.message_entry.delete('1.0', END)
+        
     # Describe a new topic 
     def set_topic_descrip(self): 
         self.topic_name = self.user.controller.topic_entry.get()
@@ -46,6 +48,6 @@ class Producer(KafkaProducer):
         super().__init__(bootstrap_servers=self.user.broker_id_str)
          
         self.set_msg_descrip()
-        print(self.send(self.topic_name, str(self.message[0]).encode()))
+        self.send(self.topic_name, str(self.message[0]).encode())
         
         #self.poll(1)
