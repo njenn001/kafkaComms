@@ -25,7 +25,7 @@ class User():
        
         # broker needs  
         self.broker_ip = '' 
-        self.broker_port = 0 
+        self.broker_port = ''
         self.broker_id_str = '' 
         
         # consumer needs 

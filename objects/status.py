@@ -9,7 +9,7 @@ class Status(Frame):
         # status 
         self.status_bar = None 
         self.connection_status = ''
-        self.action_status = FALSE 
+        self.action_status = '' 
                 
         # Status Bar Init 
         self.UIinit()

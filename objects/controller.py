@@ -37,6 +37,9 @@ class Controller(Frame):
         self.close_button = None 
 
         # titles 
+        self.title = None 
+        self.title_txt = 'Begin by testing broker IP connection'
+        
         self.host_title = None 
         self.port_title = None 
         self.message_title = None 
@@ -66,13 +69,41 @@ class Controller(Frame):
 
         # Controller Init 
         self.UIinit()
+        
+        
+    # Reconfigure button elements 
+    def reconfig(self, conf_str): 
+        
+        if conf_str == 'init': 
+            self.host_entry.config(state='normal')
+            self.port_entry.config(state='normal')
+            self.topic_entry.config(state='disabled')
+            self.message_entry.config(state='disabled')
+            self.rep_fac_entry.config(state='disabled')
+            self.part_entry.config(state='disabled')
+                   
+        '''def enable(children): 
+            for c in children: 
+                c.configure(state='normal')
+        
+        def disable(children): 
+            for c in children: 
+                c.configure(state='disabled')'''
     
+    
+    # Init UI elements / abilities 
     def UIinit(self): 
         
         # REWRITE 
         # OS specific and shutdown TK 
         def close(object):
             object.root.destroy() 
+            os.sys.exit()
+            
+
+        # Clear message lines 
+        def clear_msg(object): 
+            self.message_entry.delete('1.0', END)
         
         # Start action_set or Send action 
         def start_send_seq(object): 
@@ -85,8 +116,8 @@ class Controller(Frame):
                     time.sleep(5)     
                     object.user.producer.close()
                     
-                    #object.get_thread = threading.Thread(target=get_thread, args=([object]))
-                    #object.get_thread.start() 
+                    object.get_thread = threading.Thread(target=get_thread, args=([object]))
+                    object.get_thread.start() 
                     
                     object.user.status_bar.refresh_action(TRUE)
                     
@@ -149,7 +180,7 @@ class Controller(Frame):
             
             self.host_entry.delete(0, END)
             self.port_entry.delete(0, END)
-            self.topic_entry.delete(0, END)
+            # self.topic_entry.delete(0, END)
             # Figure out how to empty this self.message_entry.delete(0, END)
             self.rep_fac_entry.delete(0, END)
             self.part_entry.delete(0, END)
@@ -175,30 +206,18 @@ class Controller(Frame):
             self.close_button.config(state='normal')
             
             if self.user.producer is not None: 
-                print() 
-                self.user.producer.close()
-                self.msg_thread.join()  
-            if self.user.consumer is not None: 
-                self.user.consumer.close()
-                self.get_thread.join()  
                 
-            self.user.consumer.get = False 
-            
-        # WORK ON THIS 
-        # Reconfigure button elements 
-        def reconfig(children, conf_str): 
-            
-            if conf_str == 'msg': 
-                print()
-            
-            '''def enable(children): 
-                for c in children: 
-                    c.configure(state='normal')
-            
-            def disable(children): 
-                for c in children: 
-                    c.configure(state='disabled')'''
-          
+                print() 
+                self.user.producer = None 
+                
+                #self.msg_thread.join()  
+            if self.user.consumer is not None: 
+                
+                #self.get_thread.join()  
+                
+                self.user.consumer.get = False 
+                self.user.consumer = None 
+                    
           
         # Begin get sequence 
         def get_seq(object):
@@ -291,37 +310,170 @@ class Controller(Frame):
         
         # Initialize input frame  
         def init_input_frames(object): 
+            
+            
+            # Focus into entry 
+            def on_click(e): 
+                if e.widget.cget('state') == 'normal': 
+                    if e.widget.get() == '0.0.0.0': 
+                        object.host_entry.delete(0, 'end')
+                        object.host_entry.insert(0, '')
+                        object.host_entry.config(fg = 'black')
+                    elif e.widget.get() == '0000': 
+                        object.port_entry.delete(0, 'end')
+                        object.port_entry.insert(0, '')
+                        object.port_entry.config(fg = 'black')
+                    elif e.widget.get() == 'Dictionary': 
+                        object.topic_entry.delete(0, 'end')
+                        object.topic_entry.insert(0, '')
+                        object.topic_entry.config(fg = 'black')
+                    elif e.widget.get() == '1': 
+                        object.rep_fac_entry.delete(0, 'end')
+                        object.rep_fac_entry.insert(0, '')
+                        object.rep_fac_entry.config(fg = 'black')
+                    elif e.widget.get() == '2': 
+                        object.part_entry.delete(0, 'end')
+                        object.part_entry.insert(0, '')
+                        object.part_entry.config(fg = 'black')  
                         
-            object.input_frame = Frame(object.root)
-            object.input_frame.grid(row=1, column=1, rowspan=15)
+            # Focus into message 
+            def on_click_msg(e):
+                msg = '' 
+                lines = self.message_entry.get('1.0', END).splitlines() 
+                for l in lines: 
+                    msg += msg + str(l)
+                    
+                if msg.replace(' ', '') == 'Wordoftheday!':
+                    clear_msg(object)    
+                    
+                object.message_entry.config(fg='black')
+                        
+                                     
+                                
+            # Focus away from host entry 
+            def on_move_host(e): 
+                if e.widget.cget('state') == 'normal': 
+                    if e.widget.get() == '': 
+                        object.host_entry.insert(0, '0.0.0.0')
+                        object.host_entry.config(fg='grey')
+                        
+            # Focus away from port entry 
+            def on_move_port(e): 
+                if e.widget.cget('state') == 'normal': 
+                    if e.widget.get() == '': 
+                        object.port_entry.insert(0, '0000')
+                        object.port_entry.config(fg='grey')
+                        
+            # Focus away from topic entry 
+            def on_move_topic(e): 
+                if e.widget.cget('state') == 'normal': 
+                    if e.widget.get() == '': 
+                        object.topic_entry.insert(0, 'Dictionary')
+                        object.topic_entry.config(fg='grey')
             
-            object.host_title = Label(object.input_frame, text="HOST IP")
-            object.port_title = Label(object.input_frame, text="PORT")
-            object.topic_title = Label(object.input_frame, text="TOPIC")
-            object.message_title = Label(object.input_frame, text="MESSAGE")
-            object.rep_fac_title = Label(object.input_frame, text="REP. FACTOR")
-            object.part_title = Label(object.input_frame, text="NUM. PARTITIONS")
+            # WORK ON THIS        
+            # Focus away from message entry 
+            def on_move_msg(e): 
+                if e.widget.cget('state') == 'normal': 
+                    
+                    msg = '' 
+                    lines = self.message_entry.get('1.0', END).splitlines() 
+                    for l in lines: 
+                        msg += msg + str(l)
+                        
+                    if msg.replace(' ', '') == '': 
+                        object.message_entry.insert('1.0', 'Word of the day!')
+                        object.message_entry.config(fg='grey')
+                        
+            # Focus away from rep fac entry 
+            def on_move_rep(e): 
+                if e.widget.cget('state') == 'normal': 
+                    if e.widget.get() == '': 
+                        object.rep_fac_entry.insert(0, '1')
+                        object.rep_fac_entry.config(fg='grey')
+                        
+            # Focus away from part entry 
+            def on_move_part(e): 
+                if e.widget.cget('state') == 'normal': 
+                    if e.widget.get() == '': 
+                        object.part_entry.insert(0, '2')
+                        object.part_entry.config(fg='grey')
+                        
+            
+            # Bind entry actions 
+            def bind_entries(object): 
+                object.host_entry.bind('<FocusIn>', on_click)
+                object.host_entry.bind('<FocusOut>', on_move_host)
+                
+                object.port_entry.bind('<FocusIn>', on_click)
+                object.port_entry.bind('<FocusOut>', on_move_port)
+                
+                object.topic_entry.bind('<FocusIn>', on_click)
+                object.topic_entry.bind('<FocusOut>', on_move_topic)
+                
+                object.message_entry.bind('<FocusIn>', on_click_msg)
+                object.message_entry.bind('<FocusOut>', on_move_msg)
+
+                object.rep_fac_entry.bind('<FocusIn>', on_click)
+                object.rep_fac_entry.bind('<FocusOut>', on_move_rep)
+                
+                object.part_entry.bind('<FocusIn>', on_click)
+                object.part_entry.bind('<FocusOut>', on_move_part)
             
             
-            object.host_entry = Entry(object.input_frame, foreground='black')
-            object.port_entry = Entry(object.input_frame, foreground='black')
-            object.topic_entry = Entry(object.input_frame, foreground='black', state='disabled')
-            object.message_entry = Text(object.input_frame, foreground='black', width=15, height=5, state='disabled')
-            object.rep_fac_entry = Entry(object.input_frame, foreground='black', state='disabled')
-            object.part_entry = Entry(object.input_frame, foreground='black', state='disabled')
+            # Pack entry elements onto UI 
+            def pack_entries(object):
+                object.host_title.grid(row=1, column=0)
+                object.host_entry.grid(row=1, column=1, columnspan=14)
+                object.port_title.grid(row=2, column=0)
+                object.port_entry.grid(row=2, column=1)
+                object.topic_title.grid(row=3, column=0)
+                object.topic_entry.grid(row=3, column=1)
+                object.message_title.grid(row=4, column=0)
+                object.message_entry.grid(row=4, column=1)
+                object.rep_fac_title.grid(row=5, column=0)
+                object.rep_fac_entry.grid(row=5, column=1)
+                object.part_title.grid(row=6, column=0)
+                object.part_entry.grid(row=6, column=1) 
+                        
             
-            object.host_title.grid(row=0, column=0)
-            object.host_entry.grid(row=0, column=1, columnspan=14)
-            object.port_title.grid(row=1, column=0)
-            object.port_entry.grid(row=1, column=1)
-            object.topic_title.grid(row=2, column=0)
-            object.topic_entry.grid(row=2, column=1)
-            object.message_title.grid(row=3, column=0)
-            object.message_entry.grid(row=3, column=1)
-            object.rep_fac_title.grid(row=4, column=0)
-            object.rep_fac_entry.grid(row=4, column=1)
-            object.part_title.grid(row=5, column=0)
-            object.part_entry.grid(row=5, column=1)
+            # Init elements
+            def init_elm(object):   
+                
+                
+                # Insert example text 
+                def insert_example(object): 
+                    object.host_entry.insert(0, '0.0.0.0')
+                    object.port_entry.insert(0, '0000')
+                    object.topic_entry.insert(0, 'Dictionary')
+                    object.message_entry.insert(END,'Word of the day!') 
+                    object.rep_fac_entry.insert(0, '1')
+                    object.part_entry.insert(0, '2')
+            
+                object.input_frame = Frame(object.root)
+                object.input_frame.grid(row=1, column=1, rowspan=15)
+                
+                object.host_title = Label(object.input_frame, text="HOST IP")
+                object.port_title = Label(object.input_frame, text="PORT")
+                object.topic_title = Label(object.input_frame, text="TOPIC")
+                object.message_title = Label(object.input_frame, text="MESSAGE")
+                object.rep_fac_title = Label(object.input_frame, text="REP. FACTOR")
+                object.part_title = Label(object.input_frame, text="NUM. PARTITIONS")
+                
+                object.host_entry = Entry(object.input_frame, foreground='grey')
+                object.port_entry = Entry(object.input_frame, foreground='grey')
+                object.topic_entry = Entry(object.input_frame, foreground='grey')
+                object.message_entry = Text(object.input_frame, foreground='grey', width=15, height=5)
+                object.rep_fac_entry = Entry(object.input_frame, foreground='grey')
+                object.part_entry = Entry(object.input_frame, foreground='grey')
+                
+                insert_example(object) 
+                object.reconfig('init')
+                
+            
+            init_elm(object)
+            pack_entries(object)
+            bind_entries(object) 
                         
             
         # Initialize button frame 
@@ -374,67 +526,80 @@ class Controller(Frame):
                     object.get_button['background'] = 'white'
                 elif e.widget.cget('text') == 'Listen': 
                     object.listen_button['background'] = 'white'
+                    
             
-            object.button_frame = Frame(object.root, borderwidth=2, border=1)
-            object.button_frame.grid(row=1, column=0, pady=50, padx=(50,25))
+            # Bind button actions 
+            def bind_buttons(object): 
+                object.topic_button.bind("<Enter>", on_enter)
+                object.topic_button.bind("<Leave>", on_leave)
+                
+                object.topics_button.bind("<Enter>", on_enter)
+                object.topics_button.bind("<Leave>", on_leave)
+                
+                object.message_button.bind("<Enter>", on_enter)
+                object.message_button.bind("<Leave>", on_leave)
+                
+                object.stream_button.bind("<Enter>", on_enter)
+                object.stream_button.bind("<Leave>", on_leave)
+                
+                object.get_button.bind("<Enter>", on_enter)
+                object.get_button.bind("<Leave>", on_leave)
             
-            object.topic_button = Button(object.button_frame, text="New Topic", command= lambda:topic_seq(object), width=15, state='disabled', bg = 'white')
-            object.topics_button = Button(object.button_frame, text="Topics", command= lambda:msg_seq(object), width=15, state='disabled', bg = 'white')
-            object.message_button = Button(object.button_frame, text="Message", command= lambda:msg_seq(object), width=15, state='disabled', bg = 'white')
-            object.stream_button = Button(object.button_frame, text="Stream", command= lambda:close(object), width=15, state='disabled', bg = 'white')
-            object.get_button = Button(object.button_frame, text="Get", command= lambda:get_seq(object), width=15, state='disabled', bg = 'white')
-            object.listen_button = Button(object.button_frame, text="Listen", command= lambda:close(object), width=15, state='disabled', bg = 'white')
-            object.test_button = Button(object.button_frame, text="Test", command= lambda:test_seq(object), width=15, state='normal', bg = 'white')
-            object.start_button = Button(object.button_frame, text="Start/Send", command= lambda:start_send_seq(object), width=15, state='disabled', bg = 'white')
-            object.stop_button = Button(object.button_frame, text="Stop", command= lambda:stop_seq(object), width=15, state='disabled', bg = 'white')
-            object.close_button = Button(object.button_frame, text="Close", command= lambda:close(object), width=15, state='normal', bg = 'white')
-            
-            object.topic_button.bind("<Enter>", on_enter)
-            object.topic_button.bind("<Leave>", on_leave)
-            
-            object.topics_button.bind("<Enter>", on_enter)
-            object.topics_button.bind("<Leave>", on_leave)
-            
-            object.message_button.bind("<Enter>", on_enter)
-            object.message_button.bind("<Leave>", on_leave)
-            
-            object.stream_button.bind("<Enter>", on_enter)
-            object.stream_button.bind("<Leave>", on_leave)
-            
-            object.get_button.bind("<Enter>", on_enter)
-            object.get_button.bind("<Leave>", on_leave)
-           
-            object.listen_button.bind("<Enter>", on_enter)
-            object.listen_button.bind("<Leave>", on_leave)
-            
-            ## ## ## ## ## 
-            
-            object.test_button.bind("<Enter>", on_enter)
-            object.test_button.bind("<Leave>", on_leave)
-            
-            object.start_button.bind("<Enter>", on_enter)
-            object.start_button.bind("<Leave>", on_leave)
-            
-            object.stop_button.bind("<Enter>", on_enter)
-            object.stop_button.bind("<Leave>", on_leave)
-            
-            object.close_button.bind("<Enter>", on_enter)
-            object.close_button.bind("<Leave>", on_leave)
-            
-            
-            object.topic_button.grid(row=0, column=0)
-            object.topics_button.grid(row=1, column=0)
-            object.message_button.grid(row=2, column=0)
-            object.stream_button.grid(row=3, column=0)
-            object.get_button.grid(row=4, column=0)            
-            object.listen_button.grid(row=5, column=0)
-            object.test_button.grid(row=6, column=0)
-            object.start_button.grid(row=7, column=0)
-            object.stop_button.grid(row=8, column=0)
-            object.close_button.grid(row=9, column=0)
+                object.listen_button.bind("<Enter>", on_enter)
+                object.listen_button.bind("<Leave>", on_leave)
+                
+                object.test_button.bind("<Enter>", on_enter)
+                object.test_button.bind("<Leave>", on_leave)
+                
+                object.start_button.bind("<Enter>", on_enter)
+                object.start_button.bind("<Leave>", on_leave)
+                
+                object.stop_button.bind("<Enter>", on_enter)
+                object.stop_button.bind("<Leave>", on_leave)
+                
+                object.close_button.bind("<Enter>", on_enter)
+                object.close_button.bind("<Leave>", on_leave)
+                 
+                
+             
+            # Pack buttons into UI 
+            def pack_buttons(object):
+                object.topic_button.grid(row=0, column=0)
+                object.topics_button.grid(row=1, column=0)
+                object.message_button.grid(row=2, column=0)
+                object.stream_button.grid(row=3, column=0)
+                object.get_button.grid(row=4, column=0)            
+                object.listen_button.grid(row=5, column=0)
+                object.test_button.grid(row=6, column=0)
+                object.start_button.grid(row=7, column=0)
+                object.stop_button.grid(row=8, column=0)
+                object.close_button.grid(row=9, column=0)
+                
+                
+            # Init elements 
+            def init_elm(object):
+                object.button_frame = Frame(object.root, borderwidth=2, border=1)
+                object.button_frame.grid(row=1, column=0, pady=50, padx=(50,25))
+                
+                object.topic_button = Button(object.button_frame, text="New Topic", command= lambda:topic_seq(object), width=15, state='disabled', bg = 'white')
+                object.topics_button = Button(object.button_frame, text="Topics", command= lambda:msg_seq(object), width=15, state='disabled', bg = 'white')
+                object.message_button = Button(object.button_frame, text="Message", command= lambda:msg_seq(object), width=15, state='disabled', bg = 'white')
+                object.stream_button = Button(object.button_frame, text="Stream", command= lambda:close(object), width=15, state='disabled', bg = 'white')
+                object.get_button = Button(object.button_frame, text="Get", command= lambda:get_seq(object), width=15, state='disabled', bg = 'white')
+                object.listen_button = Button(object.button_frame, text="Listen", command= lambda:close(object), width=15, state='disabled', bg = 'white')
+                object.test_button = Button(object.button_frame, text="Test", command= lambda:test_seq(object), width=15, state='normal', bg = 'white')
+                object.start_button = Button(object.button_frame, text="Start/Send", command= lambda:start_send_seq(object), width=15, state='disabled', bg = 'white')
+                object.stop_button = Button(object.button_frame, text="Stop", command= lambda:stop_seq(object), width=15, state='disabled', bg = 'white')
+                object.close_button = Button(object.button_frame, text="Close", command= lambda:close(object), width=15, state='normal', bg = 'white')
+                
+            init_elm(object)
+            pack_buttons(object)            
+            bind_buttons(object)
             
         
         init_button_frames(self)
         init_input_frames(self)
         
         
+        self.title = Label(self.root, text=str(self.title_txt).upper()) 
+        self.title.grid(row=10, columnspan=15)

@@ -15,8 +15,6 @@ class View(Frame):
         self.root = root
         
         # frame 
-        self.title = None 
-        self.title_txt = 'Begin by testing broker IP connection'
         self.view_frame = None 
 
         # entinties 
@@ -64,5 +62,3 @@ class View(Frame):
         
         init_view_frames(self)
         
-        self.title = Text(self.view_frame) 
-        self.title.insert(END, str(self.title_txt) + "\n") 
