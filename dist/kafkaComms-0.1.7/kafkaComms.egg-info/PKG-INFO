@@ -1,0 +1,75 @@
+Metadata-Version: 1.0
+Name: kafkaComms
+Version: 0.1.7
+Summary: Communication director for Kafka cluster
+Home-page: https://github.com/njenn001/kafkaComms
+Author: Noah Jennings
+Author-email: njenn001@odu.edu
+License: MIT License
+
+Copyright (c) [year] [fullname]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+Description: # kafkaComms
+        
+        Communicate with cluster running Apache Kafka daemons 
+        
+        ## Background 
+        We have developed a small cluster of raspberry pi computers that are running the Apache Kafka daemons.  These include the zookeeper dameon on the master node and kafka broker daemons on all nodes. Once deployed, a suite of software packages can be used to send and recieve information stored on the cluster. 
+        
+        ## Software Requirements
+            - python 2.7 > 
+            - kafka-python 
+            - Tkinter 
+            - PyWin32
+        
+        ## Usage
+            Users can either run the GUI as an executable or through the command line. 
+        
+        ### Command Line 
+        Run python program. 
+        
+        ```
+        python app.py 
+        ```
+        
+        ## Acknowledgments
+        
+        
+        ### Code Contributors 
+        
+            - Noah Jennings 
+                - njenn001@odu.edu
+        
+        ### Authors
+        
+            - Noah Jennings
+                - njenn001@odu.edu
+        
+        ## Sources 
+        
+        - https://projects.apache.org/projects.html 
+        - https://hadoop.apache.org/
+        - https://kafka.apache.org/
+        - https://spark.apache.org/ 
+        - https://kafka-python.readthedocs.io/ 
+        - https://docs.python.org/
+        - https://en.wikipedia.org/wiki/Raspberry_Pi_Foundation 
+        - https://en.wikipedia.org/wiki/Raspberry_Pi 
+Platform: UNKNOWN

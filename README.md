@@ -3,7 +3,7 @@
 Communicate with cluster running Apache Kafka daemons 
 
 ## Background 
-    We have developed a small cluster of raspberry pi computers that are running the Apache Kafka daemons.  These include the zookeeper dameon on the master node and kafka broker daemons on all nodes. Once deployed, a suite of software packages can be used to send and recieve information stored on the cluster. 
+We have developed a small cluster of raspberry pi computers that are running the Apache Kafka daemons.  These include the zookeeper dameon on the master node and kafka broker daemons on all nodes. Once deployed, a suite of software packages can be used to send and recieve information stored on the cluster. 
 
 ## Software Requirements
     - python 2.7 > 
@@ -27,12 +27,12 @@ python app.py
 ### Code Contributors 
 
     - Noah Jennings 
-    -  njenn001@odu.edu
+        - njenn001@odu.edu
 
-### Authors 
+### Authors
 
     - Noah Jennings
-    - njenn001@odu.edu
+        - njenn001@odu.edu
 
 ## Sources 
 
