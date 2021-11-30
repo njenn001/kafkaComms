@@ -13,11 +13,19 @@ class Scenario():
         self.c_dep = [] 
         self.satisfied = False 
         
+        # Threads 
+        self.check_thread = None 
+        self.inst_thread = None 
+        
         self.clear_screen()
-        self.version_check()
-        self.ind_modules()
-        self.dependecy_check() 
+        
+        self.init() 
     
+    # Init Scenario
+    def init(self): 
+        self.version_check()
+        self.ind_modules() 
+        self.dependecy_check() 
     
     # Empty terminal contents 
     def clear_screen(self): 
@@ -27,23 +35,34 @@ class Scenario():
             os.system('clear')
     
     # Throw exception with suggested fix / fix error 
-    def throw_exc(msg): 
+    def throw_exc(self, msg): 
+        
+        # Python version exception 
         if msg == 'version':
-            raise Exception("Must be using Python 3.8") 
+            
+            
+            
+            raise Exception("Must be using Python 3.8.") 
+        
+        # Requirement file exception 
+        elif msg == 'req':
+            
+            
+
+            raise Exception("Requirements.txt must exist.")
   
     # Dependency check 
     def dependecy_check(self):
-        
-        print(self.n_dep)
         
         # Compare current to needed dependencies 
         def compare_modules(object): 
             caught = 0 
             for n in self.n_dep: 
                 if n not in self.c_dep: 
-                    print()
-                    #print(n.upper() + " is needed")
+                    
+                    print(n.upper() + " is needed")
                     #os.system('pip install ' + n)
+                    
                 else: 
                     caught += 1 
                     #print(n.upper() + " is available")
@@ -70,29 +89,37 @@ class Scenario():
                         self.c_dep.append(req.decode().split()[0] + "==" + req.decode().split()[1])
                     line += 1 
                     
-        print('\nChecking if dependecies are satisfied')
+        print('\nChecking if dependecies are satisfied ...')
         set_current(self) 
         compare_modules(self)
     
     # Indicate which modules are needed
     def ind_modules(self): 
         
-        print('\nSetting needed modules')
-        with open('requirements.txt', 'rb') as f: 
-            for req in f: 
-                self.n_dep.append(req.decode().strip())
-    
+        print('\nSetting needed modules ...')
+        
+        try: 
+                
+            with open('app/requirements.txt', 'rb') as f: 
+                for req in f: 
+                    self.n_dep.append(req.decode().strip())
+        except Exception as ex: 
+            self.throw_exc('req')
+                
     # Check version on init 
     def version_check(self): 
+        
+        print('\nChecking Python Version ...')
+        
         if self.os_name == 'nt': 
             if self.py_version != 3.8:
                 self.throw_exc('version')
             else: 
-                print('Correct Python version')
+                print('\nCorrect Python version.')
         else: 
             if self.py_version != 3.8:
                 self.throw_exc('version')
             else: 
-                print('Correct Python version')
+                print('\nCorrect Python version.')
     
      

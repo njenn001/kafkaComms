@@ -1,4 +1,4 @@
-from objects.consumer import Consumer 
+from consumer import Consumer 
 
 class Tester(): 
     def __init__(self, user):
