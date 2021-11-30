@@ -1,4 +1,5 @@
 import os 
+import threading 
 
 class Scenario(): 
     def __init__(self, os_name, py_version):
@@ -25,7 +26,7 @@ class Scenario():
     def init(self): 
         self.version_check()
         self.ind_modules() 
-        self.dependecy_check() 
+        self.check_thread = threading.Thread(target=self.dependecy_check, args=([self])) 
     
     # Empty terminal contents 
     def clear_screen(self): 
