@@ -1,6 +1,6 @@
-from objects.consumer import Consumer
-from objects.producer import Producer
-from objects.tester import Tester 
+from consumer import Consumer
+from producer import Producer
+from tester import Tester 
 
 
 from tkinter import *

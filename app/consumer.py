@@ -1,8 +1,5 @@
+from kafka import KafkaConsumer
 from kafka import * 
-
-import time 
-import threading 
-
 class Consumer(KafkaConsumer): 
     def __init__(self, user):
         self.user = user 

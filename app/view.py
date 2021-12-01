@@ -1,7 +1,4 @@
-from werkzeug.sansio.multipart import State
-from objects.producer import Producer
-
-
+from producer import Producer
 from tkinter import *
 
 import os  

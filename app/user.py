@@ -1,23 +1,17 @@
+import matplotlib
+matplotlib.use('Agg')
+
 from tkinter import * 
 
-from objects.controller import Controller 
-from objects.view import View
-from objects.status import Status
+from controller import Controller 
+from view import View
+from status import Status
 
-
-import os 
-import datetime 
 
 class User(): 
     def __init__(self):
         
-        # system elements 
-        self.os_name = '' 
-        self.start_date_time = '' 
-        self.resolution = [] 
-        self.res_str = ''
-        
-        # gui elements 
+        # Comm elements  
         self.root = None
         self.controller = None 
         self.view = None 
@@ -34,10 +28,10 @@ class User():
         
         # producer needs 
         self.producer = None 
-        self.producers = []        
+        self.producers = []   
         
-        self.os_eval() 
-        
+        self.run()      
+                
         
     # Set broker elements 
     def set_broker_info(self): 
@@ -49,15 +43,19 @@ class User():
     # Run tkinter systems         
     def run(self):
         
+        # Boot status bar  
         def boot_status(object): 
             self.status_bar = Status(object.root, self) 
             
+        # Open message view 
         def open_view(object): 
             self.view = View(object.root, self)
         
+        # Open comms controller 
         def open_controller(object): 
             self.controller = Controller(object.root, self)
         
+        # Init Tk 
         def root_init(object): 
             object.root=Tk()
             object.root.attributes("-topmost", True)

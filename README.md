@@ -6,7 +6,7 @@ Communicate with cluster running Apache Kafka daemons.
 We have developed a small cluster of raspberry pi computers that are running the Apache Kafka daemons.  These include the zookeeper dameon on the master node and kafka broker daemons on all nodes. Once deployed, a suite of software packages can be used to send and recieve information stored on the cluster.
 
 ## Software Requirements
-    - python 3.8
+    - python 3.8.2
     - pipreqs 
     - pytest
     - kafka-python 
@@ -39,12 +39,15 @@ Using Make provides users a shortcut when installing dependencies, running tests
 
 
 ### Windows 
-Linux users have a number or options when trying to start the communication center.
+Windows users have a number or options when trying to start the communication center.
 
 ```
-After installing Python 3.8, users can simply start the communication center. 
+After installing Python 3.8.2, users must satisfy project dependencies within a virtual environment before using the communication center.  
 
-- python app/app.py
+- virtualenv venv
+- .\venv\Scripts\activate 
+- .\venv\Scripts\pip.exe install -r requirements.txt
+- .\venv\Scripts\python.exe app/app.py -s
 ```
 
 ## Acknowledgments

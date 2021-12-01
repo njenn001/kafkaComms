@@ -1,2 +1,2 @@
-pipreqs
-pytest
+kafka-python
+matplotlib
