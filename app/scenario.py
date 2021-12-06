@@ -68,6 +68,12 @@ class Scenario():
             
 
             raise Exception("Requirements.txt must exist.")
+        
+        elif msg == 'Env': 
+            
+            
+            
+            raise Exception("Windows virtual environment.")
 
     # Stop all running threads
     def stop_threads(self): 
@@ -175,7 +181,7 @@ class Scenario():
     # Check version on init 
     def os_eval(self): 
         
-        self.os_name = os.name.replace(' ', '')
+        self.os_name = os.name.replace(' ', '')       
         self.py_version = float( str(os.sys.version_info[0]) + "." + str(os.sys.version_info[1]) ) 
                 
         if self.os_name == 'nt': 
