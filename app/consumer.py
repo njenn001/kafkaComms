@@ -3,6 +3,9 @@ from kafka import *
 class Consumer(KafkaConsumer): 
     def __init__(self, user):
         self.user = user 
+        
+        # server info 
+        self.bootstrap_server = '' 
          
         # topic info 
         self.topic_list = [] 
@@ -17,7 +20,29 @@ class Consumer(KafkaConsumer):
         
         # thread 
         self.show_thread = None 
+    
+    # Decode existing args
+    def decode_args(self): 
         
+        print(self.args[0][0])
+        self.bootstrap_server = self.args[0][0]
+        self.topic_name = self.args[1][0]
+    
+    # Capture incoming Strict args 
+    def strict(self, args): 
+        self.args = args 
+        self.decode_args() 
+        super().__init__(self.topic_name, bootstrap_servers=self.bootstrap_server, group_id=None, auto_offset_reset='earliest', enable_auto_commit=False)
+
+        try:
+            for m in self: 
+                self.messages.append(m.value.decode())
+                print(m.value.decode())                 
+                          
+        except Exception as ex: 
+            print(ex) 
+
+    
     # Describe a new topic 
     def set_topic_descrip(self): 
         self.topic_name = self.user.controller.topic_entry.get()

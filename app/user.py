@@ -28,9 +28,7 @@ class User():
         
         # producer needs 
         self.producer = None 
-        self.producers = []   
-        
-        self.run()      
+        self.producers = []    
                 
         
     # Set broker elements 
