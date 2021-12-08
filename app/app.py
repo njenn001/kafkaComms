@@ -20,9 +20,9 @@ def main():
                     
             # Run evaluation and resulting programs 
             scene = Scenario() 
-            scene.virtual_init() 
+            scene.inst_thread.start() 
             
-            time.sleep(5) 
+            #time.sleep(5) 
             scene.stop_threads()             
             
         elif args.run: 
@@ -34,6 +34,7 @@ def main():
             you.run() 
             
         elif args.produce: 
+            from user import User 
             from producer import Producer 
             print('Begin message production')
                 
@@ -44,6 +45,7 @@ def main():
             you.producer.strict(p_info)
             
         elif args.consume: 
+            from user import User 
             from consumer import Consumer 
             print('Begin message consumption')
                 

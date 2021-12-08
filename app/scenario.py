@@ -82,7 +82,7 @@ class Scenario():
         
         self.set_inst_thread( threading.Thread(target=self.virtual_init, args=([]) ) )
         self.add_thread(self.get_inst_thread())
-        self.inst_thread.start() 
+        #self.inst_thread.start() 
         
    
     # Empty terminal contents 
@@ -123,9 +123,12 @@ class Scenario():
 
     # Stop all running threads
     def stop_threads(self): 
-        for t in self.get_t_list():
-            if not t.is_alive(): 
-                t.join()     
+        try: 
+            for t in self.get_t_list():
+                if not t.is_alive(): 
+                    t.join() 
+        except Exception as ex: 
+            self.stop_threads() 
     
     # Init virtual environment 
     def virtual_init(self): 

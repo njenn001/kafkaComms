@@ -7,14 +7,62 @@ We have developed a small cluster of raspberry pi computers that are running the
 
 ## Software Requirements
     - python 3.8.2
-    - pipreqs 
-    - pytest
+    - virtualenv
+    - matplotlib
     - kafka-python 
-    - Tkinter 
 
 ## Usage
 
-In order to use the communication center, users must first configure their own enviornment.
+After confirming correct Python 3.8.2 installation, os dependent instructions are provided below.
+
+### Windows users 
+First install dependencies and create virtual environment by running setup scripts:
+
+```
+python setup.py 
+python app\app.py -s 
+```
+
+Activate the virtual environment before using. A help script is provided with the application.
+
+```
+.\venv\Scripts\activate     
+python app\app.py -h
+```
+
+Run in GUI mode or strict mode, consuming and producing messages under specified servers and topics.
+
+```
+python app\app.py -r
+python app\app.py -c --bss 000.000.000.000 --topic example 
+python app\app.py -p --bss 000.000.000.000 --topic example_topic --msg example_message 
+```
+
+
+### Linux users
+First create virtual environment and install dependencies by running setup scripts:
+
+```
+python setup.py 
+python app/app.py -s 
+```
+
+Activate the virtual environment before using. A help script is provided with the application.
+
+```
+source ./venv/bin/activate      
+python app/app.py -h
+```
+
+Run in GUI mode or strict mode, consuming and producing messages under specified servers and topics.
+
+```  
+python app/app.py -r
+python app/app.py -c --bss 000.000.000.000 --topic example 
+python app/app.py -p --bss 000.000.000.000 --topic example_topic --msg example_message 
+``` 
+
+
 
 ## Acknowledgments
 
