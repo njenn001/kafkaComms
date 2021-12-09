@@ -2,6 +2,7 @@ import matplotlib
 matplotlib.use('Agg')
 
 from tkinter import * 
+import os 
 
 from controller import Controller 
 from view import View
@@ -28,8 +29,31 @@ class User():
         
         # producer needs 
         self.producer = None 
-        self.producers = []    
-                
+        self.producers = []  
+        
+    
+    # GET / SET root 
+    # GET / SET controller 
+    # GET / SET view
+    # GET / SET status bar 
+    # GET / SET broker ip 
+    # GET / SET broker port
+    # GET / SET broker id string 
+    # GET / SET consumer 
+    # GET / SET consumers
+    # GET / SET producer 
+    # GET / SET producers
+    
+
+    # Throw exception 
+    def throw_exec(self, msg): 
+        if msg == 'p_args': 
+            raise Exception("Missing production arguments")
+        elif msg == 'c_args': 
+            raise Exception("Missing consumption arguments")
+        elif msg == 'gui': 
+            raise Exception("Ensure display element")
+                  
         
     # Set broker elements 
     def set_broker_info(self): 
@@ -55,6 +79,11 @@ class User():
         
         # Init Tk 
         def root_init(object): 
+            
+            if os.environ.get('DISPLAY','') == '':
+                print('no display found. Using :0.0')
+                os.environ.__setitem__('DISPLAY', ':0.0')
+                
             object.root=Tk()
             object.root.attributes("-topmost", True)
             object.root.title('Kafka Communications')

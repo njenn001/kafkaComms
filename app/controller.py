@@ -64,6 +64,7 @@ class Controller(Frame):
         self.test_started = False 
 
         # threads
+        self.topic_thread = None
         self.msg_thread = None 
         self.get_thread = None 
 
@@ -108,6 +109,7 @@ class Controller(Frame):
         # Start action_set or Send action 
         def start_send_seq(object): 
             
+            # Message thread 
             def message_thread(object): 
                 object.user.producer = Producer(object.user)
 
@@ -127,7 +129,8 @@ class Controller(Frame):
                     self.user.status_bar.refresh_action(FALSE)
 
                     print(ex)
-                    
+              
+             # Get thread       
             def get_thread(object): 
                 object.user.consumer = Consumer(object.user)
                 
@@ -143,13 +146,31 @@ class Controller(Frame):
                     self.user.status_bar.refresh_action(FALSE)
 
                     print(ex)   
+                    
+            # Topic thread 
+            def topic_thread(object): 
+                object.user.producer = Producer(object.user)
+                
+                try: 
+                    object.user.producer.make_topic()
+                    time.sleep(5)
+                    
+                    object.user.status_bar.refresh_action(TRUE)
+                        
+                except Exception as ex: 
+                
+                    self.user.status_bar.refresh_action(FALSE)
+
+                    print(ex)   
             
             # Send new Topic 
             if object.topic_started: 
                 object.user.producer = Producer(object.user)
             
                 try: 
-                    object.user.producer.make_topic() 
+                    object.topic_thread = threading.Thread(target=message_thread, args=([object]))
+                    object.topic_thread.start() 
+                    
                 except Exception as ex: 
                     print(ex)
 
@@ -157,20 +178,28 @@ class Controller(Frame):
             
             # Send Message 
             elif object.msg_started: 
+                
+                try: 
 
-                object.msg_thread = threading.Thread(target=message_thread, args=([object]))
-                object.msg_thread.start() 
+                    object.msg_thread = threading.Thread(target=message_thread, args=([object]))
+                    object.msg_thread.start() 
+                    
+                except Exception as ex: 
+                    print(ex) 
                 
                 object.msg_started = False 
-                
-                
                 #object.topic_entry.delete(0, 'end')
 
             # Get Messages once 
             elif object.get_started: 
                 
-                object.get_thread = threading.Thread(target=get_thread, args=([object]))
-                object.get_thread.start()
+                try : 
+                    
+                    object.get_thread = threading.Thread(target=get_thread, args=([object]))
+                    object.get_thread.start()
+                    
+                except Exception as ex:                    
+                    print(ex)
                 
                 object.get_started = False 
 

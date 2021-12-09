@@ -1,10 +1,12 @@
-from kafka import * 
+from kafka import *
+from kafka import KafkaAdminClient  
 from tkinter import * 
 import json
 import time 
-import kafka 
+import threading
+import keyboard 
 
-class Producer(KafkaProducer): 
+class Producer(KafkaAdminClient): 
     def __init__(self, user):
         self.user = user 
         self.args = None 
@@ -23,8 +25,13 @@ class Producer(KafkaProducer):
         
         # threads 
         self.key_thread = None 
+        self.key_thread = threading.Thread(target=self.catch_key, args=([]))
         
-        
+    # Catch input key 
+    def catch_key(self):
+        if keyboard.is_pressed('q'):
+            print() 
+    
     # Decode existing args
     def decode_args(self): 
         
@@ -39,9 +46,6 @@ class Producer(KafkaProducer):
     def strict(self, args): 
         self.args = args 
         self.decode_args() 
-        
-        print(self.topic_name, self.message)
-        
         
         try:
             self.send(self.topic_name, str(self.message).encode())
@@ -63,7 +67,7 @@ class Producer(KafkaProducer):
         self.rep_fac = self.user.controller.rep_fac_entry.get() 
         self.num_par = self.user.controller.part_entry.get() 
 
-        self.topic_var = kafka.NewTopic[(self.topic_name, self.rep_fac, self.num_par)]
+        self.topic_var = NewTopic[(self.topic_name, self.rep_fac, self.num_par)]
 
 
     # Make a new topic   

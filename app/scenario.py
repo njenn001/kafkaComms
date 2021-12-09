@@ -84,6 +84,27 @@ class Scenario():
         self.add_thread(self.get_inst_thread())
         #self.inst_thread.start() 
         
+    # Clean project directories 
+    def clean_sequence(self):
+        
+        # Windows Version
+        def windows_clean(object): 
+            try:
+                os.system(r'rmdir app\__pycache__ /S /Q && del app\*.pyc')
+            except Exception as ex: 
+                print(ex) 
+        # Linux Verison
+        def linux_clean(object): 
+            try: 
+                os.system(r'rm -rf app\__pycache__')
+            except Exception as ex: 
+                print(ex) 
+            
+        if self.get_style() == 'Windows': 
+            windows_clean(self)
+        else: 
+            linux_clean(self)
+         
    
     # Empty terminal contents 
     def clear_screen(self): 
@@ -173,8 +194,10 @@ class Scenario():
         
         if self.get_os_name() == 'nt': 
             self.set_style('Windows')
+            print(self.get_style())
         else: 
             self.set_style('Linux')
+            print(self.get_style())
         
     # Check Python version
     def version_check(self):  

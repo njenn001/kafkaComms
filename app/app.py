@@ -2,11 +2,12 @@ import os
 import argparse 
 import random
 import time
+import threading 
 
 
 # Main function 
 def main(): 
-            
+          
     # Decode available arguments 
     def args_decoder(args): 
         
@@ -26,12 +27,19 @@ def main():
             scene.stop_threads()             
             
         elif args.run: 
+            
             from user import User 
             print('Starting native sequence ...')
             
             # Run native sequence 
             you = User()
-            you.run() 
+
+            try: 
+                
+                you.run() 
+            except Exception as ex: 
+                
+                you.throw_exec('gui')
             
         elif args.produce: 
             from user import User 
@@ -39,10 +47,14 @@ def main():
             print('Begin message production')
                 
             # Run Strict User 
-            p_info = [args.bss, args.top, args.m]
             you = User() 
-            you.producer = Producer(you) 
-            you.producer.strict(p_info)
+            try: 
+                p_info = [args.bss, args.top, args.m]
+                
+                you.producer = Producer(you) 
+                you.producer.strict(p_info)
+            except Exception as ex: 
+                you.throw_exec('p_args')
             
         elif args.consume: 
             from user import User 
@@ -50,11 +62,21 @@ def main():
             print('Begin message consumption')
                 
             # Run Strict Scenario 
-            c_info = [args.bss, args.top]
             you = User() 
-            you.consumer = Consumer(you) 
-            you.consumer.strict(c_info)
+            try:
+                c_info = [args.bss, args.top]
             
+                you.consumer = Consumer(you) 
+                you.consumer.strict(c_info)
+            except Exception as ex: 
+                you.throw_exec('c_args')
+                
+        elif args.clean: 
+            from scenario import Scenario
+            
+            scene = Scenario() 
+            scene.clean_sequence() 
+                
     # Init command parser 
     def init_parser(): 
         parser = argparse.ArgumentParser(
@@ -68,6 +90,7 @@ def main():
         - run 
         - produce 
         - consume 
+        - clean 
         '''
         mode_group = parser.add_mutually_exclusive_group(required=True)
 
@@ -88,8 +111,12 @@ def main():
                                 help='Quick message production.')
         
         # Consume Mode 
-        mode_group.add_argument('-c', '--consume', action='store_true',
+        mode_group.add_argument('-co', '--consume', action='store_true',
                                 help='Quick message consumption.')
+        
+        # Consume Mode 
+        mode_group.add_argument('-cl', '--clean', action='store_true',
+                                help='Clean project directories.')
         
         
         '''
@@ -104,27 +131,27 @@ def main():
         
         # Bootstrap server flag 
         parser.add_argument(
-        '--bss', '--boostrap_servers', default='192.168.0.101:9092', type=str, help="Specify broker IP address(es) and port number(s).", nargs='+')
+        '--bss', '--boostrap_servers', type=str, help="Specify broker IP address(es) and port number(s).", nargs='+')
         
         # Topic flag 
         parser.add_argument(
-        '--top', '--topic', default='foobar', type=str, help="Specify cluster topic.", nargs='+')
+        '--top', '--topic', type=str, help="Specify cluster topic.", nargs='+')
         
         # Msg flag 
         parser.add_argument(
-        '--m', '--msg', default='', type=str, help="Write desired message.", nargs='+')
+        '--m', '--msg', type=str, help="Write desired message.", nargs='+')
                  
         # Rep fac flag 
         parser.add_argument(
-        '--rep', '--replication-factor', default='', type=str, help="Specify replication factor.", nargs='+')
+        '--rep', '--replication-factor', type=str, help="Specify replication factor.", nargs='+')
         
         # Part num flag 
         parser.add_argument(
-        '--par', '--partition-number', default='', type=str, help="Specify number of partitions.", nargs='+')
+        '--par', '--partition-number', type=str, help="Specify number of partitions.", nargs='+')
         
         # Loop flag 
         parser.add_argument(
-        '--l', '--loop', default=[False], type=bool, help="Set production/consumption looping.", nargs='+')
+        '--l', '--loop', type=bool, help="Set production/consumption looping.", nargs='+')
         
         return parser 
             

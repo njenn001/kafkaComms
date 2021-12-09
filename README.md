@@ -15,7 +15,7 @@ We have developed a small cluster of raspberry pi computers that are running the
 
 After confirming correct Python 3.8.2 installation, os dependent instructions are provided below.
 
-### Windows users 
+### Windows users
 First install dependencies and create virtual environment by running setup scripts:
 
 ```
@@ -38,6 +38,11 @@ python app\app.py -c --bss 000.000.000.000 --topic example
 python app\app.py -p --bss 000.000.000.000 --topic example_topic --msg example_message 
 ```
 
+Deactivate the virtual environment as such:
+
+```
+deactivate 
+```
 
 ### Linux users
 First create virtual environment and install dependencies by running setup scripts:
@@ -51,23 +56,28 @@ Activate the virtual environment before using. A help script is provided with th
 
 ```
 source ./venv/bin/activate      
-python app/app.py -h
+./venv/bin/python app/app.py -h
 ```
 
 Run in GUI mode or strict mode, consuming and producing messages under specified servers and topics.
 
-```  
-python app/app.py -r
-python app/app.py -c --bss 000.000.000.000 --topic example 
-python app/app.py -p --bss 000.000.000.000 --topic example_topic --msg example_message 
-``` 
+```
+./venv/bin/python app/app.py -r
+./venv/bin/python app/app.py -c --bss 000.000.000.000 --topic example 
+./venv/bin/python app/app.py -p --bss 000.000.000.000 --topic example_topic --msg example_message 
+```
 
+Deactivate the virtual environment as such:
+
+```
+deactivate 
+```
 
 
 ## Acknowledgments
 
 
-### Code Contributors 
+### Code Contributors
 
     - Noah Jennings 
         - njenn001@odu.edu
@@ -77,7 +87,7 @@ python app/app.py -p --bss 000.000.000.000 --topic example_topic --msg example_m
     - Noah Jennings
         - njenn001@odu.edu
 
-## Sources 
+## Sources
 
 - https://projects.apache.org/projects.html 
 - https://kafka.apache.org/
