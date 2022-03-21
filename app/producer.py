@@ -1,5 +1,6 @@
 from kafka import *
 from kafka import KafkaAdminClient  
+from kafka.admin import * 
 from tkinter import * 
 import json
 import time 
@@ -73,11 +74,11 @@ class Producer(KafkaAdminClient):
     # Make a new topic   
     def make_topic(self): 
         super().__init__(bootstrap_servers=self.user.broker_id_str)
-         
-        self.set_topic_descrip() 
-        self.create_topics([self.topic_var, None, True])
-        self.poll(1)
-
+        try: 
+            self.set_topic_descrip() 
+            self.create_topics(self.topic_var, timeout_ms=None, validate_only=True)
+        except Exception as ex: 
+            self.user.throw_exec('c_t')
     # Send a message 
     def send_msg(self): 
         super().__init__(bootstrap_servers=self.user.broker_id_str)

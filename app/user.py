@@ -48,11 +48,13 @@ class User():
     # Throw exception 
     def throw_exec(self, msg): 
         if msg == 'p_args': 
-            raise Exception("Missing production arguments")
+            raise Exception("Failed production. Check arguments and connection.")
         elif msg == 'c_args': 
-            raise Exception("Missing consumption arguments")
+            raise Exception("Failed consumption. Check arguments and connection.")
         elif msg == 'gui': 
-            raise Exception("Ensure display element")
+            raise Exception("Bash systems rely on strict mode")
+        elif msg == 'c_t': 
+            raise Exception("Cannot create new Topic")
                   
         
     # Set broker elements 

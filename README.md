@@ -81,6 +81,8 @@ deactivate
 
     - Noah Jennings 
         - njenn001@odu.edu
+    - Vincent Houston 
+        - vincent.e.houston@nasa.gov
 
 ### Authors
 
